@@ -1,0 +1,554 @@
+2)set serveroutput on size 10000;
+declare
+v_no number(2):=1;
+cursor cur is 
+select m.name as name,m.age as age from minion m where m.age<5;
+v_name cur%rowtype;
+begin
+open cur;
+for v_no in 1 .. 2
+loop 
+fetch cur into v_name;
+if v_name.age<5 then
+dbms_output.put_line(v_name.name||'      '||v_name.age);
+end if;
+end loop;
+close cur;
+end;
+/
+Kevin      4
+Liza      3
+
+==================================================================================================
+ create table oddeven(
+ind number(3) primary key,
+num number(3),
+type varchar(5)
+);
+
+
+insert into oddeven (ind,num,type) values(1,100,'');
+insert into oddeven (ind,num,type) values(2,101,'');
+insert into oddeven (ind,num,type) values(3,102,'');
+insert into oddeven (ind,num,type) values(4,103,'');
+insert into oddeven (ind,num,type) values(5,104,'');
+insert into oddeven (ind,num,type) values(6,105,'');
+insert into oddeven (ind,num,type) values(7,106,'');
+insert into oddeven (ind,num,type) values(8,107,'');
+insert into oddeven (ind,num,type) values(9,108,'');
+insert into oddeven (ind,num,type) values(10,109,'');
+insert into oddeven (ind,num,type) values(11,110,'');
+insert into oddeven (ind,num,type) values(12,111,'');
+insert into oddeven (ind,num,type) values(13,112,'');
+insert into oddeven (ind,num,type) values(14,113,'');
+insert into oddeven (ind,num,type) values(15,114,'');
+insert into oddeven (ind,num,type) values(16,115,'');
+insert into oddeven (ind,num,type) values(17,116,'');
+insert into oddeven (ind,num,type) values(18,117,'');
+insert into oddeven (ind,num,type) values(19,118,'');
+insert into oddeven (ind,num,type) values(20,119,'');
+insert into oddeven (ind,num,type) values(21,120,'');
+insert into oddeven (ind,num,type) values(22,121,'');
+insert into oddeven (ind,num,type) values(23,122,'');
+insert into oddeven (ind,num,type) values(24,123,'');
+insert into oddeven (ind,num,type) values(25,124,'');
+
+ select * from oddeven;
+
+       IND        NUM TYPE
+---------- ---------- -----
+         1        100
+         2        101
+         3        102
+         4        103
+         5        104
+         6        105
+         7        106
+         8        107
+         9        108
+        10        109
+        11        110
+
+       IND        NUM TYPE
+---------- ---------- -----
+        12        111
+        13        112
+        14        113
+        15        114
+        16        115
+        17        116
+        18        117
+        19        118
+        20        119
+        21        120
+        22        121
+
+       IND        NUM TYPE
+---------- ---------- -----
+        23        122
+        24        123
+        25        124
+
+25 rows selected.
+
+
+
+1)set serveroutput on size 10000;
+declare
+cursor c1 is 
+select ind,num from oddeven;
+r1 c1%rowtype;
+begin
+open c1;
+loop
+fetch c1 into r1;
+exit when c1%NOTFOUND;
+if (r1.num mod 2)=0 then 
+update oddeven 
+set oddeven.type='even'
+where oddeven.ind=r1.ind;
+elseselect * from oddeven;
+update oddeven
+set oddeven.type='odd'
+where oddeven.ind=r1.ind;
+end if;
+end loop;
+close c1;
+end;
+/
+  IND        NUM TYPE
+---------- ---------- -----
+         1        100 even
+         2        101 odd
+         3        102 even
+         4        103 odd
+         5        104 even
+         6        105 odd
+         7        106 even
+         8        107 odd
+         9        108 even
+        10        109 odd
+        11        110 even
+
+       IND        NUM TYPE
+---------- ---------- -----
+        12        111 odd
+        13        112 even
+        14        113 odd
+        15        114 even
+        16        115 odd
+        17        116 even
+        18        117 odd
+        19        118 even
+        20        119 odd
+        21        120 even
+        22        121 odd
+
+       IND        NUM TYPE
+---------- ---------- -----
+        23        122 even
+        24        123 odd
+        25        124 even
+
+25 rows selected.
+=======================================================================
+3)set serveroutput on size 10000;
+declare 
+m_evil evilness.description%type;
+m_evil_id minion.evilness%type;
+descr varchar(10);
+cursor cur is
+select m.name as name,m.evilness as evil from minion m ;
+r_min cur%rowtype;
+begin
+open cur;
+loop
+fetch cur into r_min;
+exit when cur%NOTFOUND;
+case r_min.evil
+	when 201 then
+descr:='sneeze';
+	when 202 then
+descr:='itch';
+	when 203 then
+descr:='tickle';
+	when 204 then
+descr:='yawn';
+end case;
+dbms_output.put_line(r_min.name||'      '||descr);
+end loop;
+close cur;
+end;
+/
+
+
+Hedwig      sneeze
+Stuart      sneeze
+Bob      tickle
+Kevin      yawn
+Dave      yawn
+Mark      itch
+Phil      sneeze
+Liza      yawn
+Mike      tickle
+Paul      itch
+Lance      yawn
+Zugi      itch
+Steve      tickle
+
+
+======================================================================================================
+4)set serveroutput on size 10000;
+declare
+cursor cur is
+select distinct m.name as name,mi.country as country,mi.pre_req as req 
+from master m,mission mi,involve_in i 
+where i.mission_id=mi.mission_id and i.master_id=m.master_id;
+r cur%rowtype;
+begin
+open cur;
+loop
+fetch cur into r;
+exit when cur %notfound;
+if r.req>203
+then
+if r.country!='USA'
+then
+dbms_output.put_line(r.name||'  '||r.country||'  '||r.req);
+end if;
+else
+dbms_output.put_line('');
+end if;
+end loop;
+close cur;
+end;
+/
+
+PL/SQL procedure successfully completed.
+
+
+
+===========================================================================================================
+5)
+set serveroutput on size 100000;
+declare
+cursor c is
+select m.minion_id,m.name,t.e_level as lev 
+from minion m,takes_training tt,training t 
+where m.evilness=202 and tt.training_id=t.training_id and tt.minion_id=m.minion_id;
+r1 c%rowtype;
+begin
+open c;
+loop
+fetch c into r1;
+exit when c%notfound;
+if r1.lev=203  then
+dbms_output.put_line('goes training');
+end if;
+end loop;
+close c;
+end;
+/
+
+
+goes training
+
+PL/SQL procedure successfully completed.
+======================================================================================
+
+procedures:
+1)create or replace procedure mas_type(val IN master.mtype%type)
+is
+cursor cur is
+select distinct i.master_id as id,m.name as name,m.mtype as tpe 
+from involve_in i,master m 
+where mtype=val and i.master_id=m.master_id;
+r1 cur%rowtype;
+begin
+open cur;
+loop
+fetch cur into r1;
+exit when cur%notfound;
+dbms_output.put_line(r1.id||'   '||r1.name||'  '||r1.tpe);
+end loop;
+close cur;
+end;
+/
+ exec mas_type('fictional');
+104   Ivan Dracula  fictional
+103   Frankenstein  fictional
+
+=============================================================================
+2)
+create or replace procedure fem_min
+is
+cursor cur is
+select tt.minion_id as id,m.name as name
+from takes_training tt,minion m 
+where tt.minion_id=m.minion_id and m.gender='F' and m.evilness<=203;
+r1 cur%rowtype;
+begin
+open cur;
+loop
+fetch cur into r1;
+exit when cur%notfound;
+dbms_output.put_line(r1.id||'  '||r1.name);
+end loop;
+close cur;
+end;
+/
+ exec fem_min;
+311  Zugi
+============================================================================================
+
+3)
+create or replace procedure mas_type(val IN mission.mission_id%type)
+is
+cursor cur is
+select mission_id,estimate,status from mission where mission_id=val;
+r1 cur%rowtype;
+begin
+open cur;
+loop
+fetch cur into r1;
+exit when cur%notfound;
+dbms_output.put_line(r1.mission_id||'  '||r1.estimate||'  '||r1.status);
+end loop;
+close cur;
+end;
+/
+
+
+SQL> exec mas_type(501);
+501  1200  underway
+
+PL/SQL procedure successfully completed.
+
+SQL> exec mas_type(502);
+502  2500  underway
+
+PL/SQL procedure successfully completed.
+
+SQL> exec mas_type(503);
+503  2200  underway
+
+PL/SQL procedure successfully completed.
+
+SQL> exec mas_type(504);
+504  2400  completed
+
+PL/SQL procedure successfully completed.
+
+SQL> exec mas_type(505);
+505  4000  cancelled
+
+PL/SQL procedure successfully completed.
+
+=============================================================================================
+4)
+create or replace procedure train(val IN training.trainer%type)
+is
+cursor cur is
+select tt.minion_id as id,m.name as name
+ from training t,takes_training tt,minion m 
+where t.trainer=val and t.training_id=tt.training_id and tt.minion_id=m.minion_id;
+r1 cur%rowtype;
+begin
+open cur;
+loop
+fetch cur into r1;
+exit when cur%notfound;
+dbms_output.put_line(r1.id||'  '||r1.name);
+end loop;
+close cur;
+end;
+/
+
+exec train(312);
+303  Kevin
+311  Zugi
+
+ exec train(304);
+301  Stuart
+
+PL/SQL procedure successfully completed.
+
+===================================================================================================
+5)
+create or replace procedure mi_de
+is
+cursor cur is
+select mission_id as id from mission where from_d like '%JAN%' or to_d like '%JAN%'; 
+r1 cur%rowtype;
+begin
+open cur;
+loop
+fetch cur into r1;
+exit when cur%notfound;
+dbms_output.put_line(r1.id);
+end loop;
+close cur;
+end;
+/
+
+ exec mi_de;
+501
+502
+
+=====================================================================================================
+create or replace function fcnt
+return number is
+cnt number(4);
+begin
+select count(i.minion_id) into cnt 
+from involve_in i,minion m 
+where i.minion_id=m.minion_id and m.gender='M';
+return cnt;
+end;
+/
+Function created.
+
+declare
+c number(4);
+begin
+c:=fcnt();
+dbms_output.put_line(c);
+end;
+/
+
+5
+
+========================================================================================================
+
+create or replace function mis_det(val IN mission.mission_id%type,sta OUT mission.status%type,est OUT mission.estimate%type)
+return number is
+i number(1) ;
+cursor cur is
+select mission_id,estimate,status from mission where mission_id=val;
+r1 cur%rowtype;
+begin
+open cur;
+loop
+fetch cur into r1;
+exit when cur%notfound;
+est:=r1.estimate;
+sta:=r1.status;
+end loop;
+close cur;
+return i;
+end;
+/
+
+declare
+v_a number(1);
+sta mission.status%type;
+est mission.estimate%type;
+begin
+v_a:=mis_det(501,sta,est);
+dbms_output.put_line(sta);
+dbms_output.put_line(est);
+end;
+/
+
+underway
+1200
+
+PL/SQL procedure successfully completed.
+
+=======================================================================================================
+create or replace function cur_name(id IN minion.minion_id%type)
+return currency.name%type
+is
+cname currency.name%type;
+cursor c is
+select c.name as name from currency c,minion m where  m.minion_id=id and m.nationality=c.country;
+r1 c%rowtype;
+begin
+open c;
+loop
+fetch c into r1;
+exit when c%notfound;
+cname:=r1.name;
+end loop;
+return cname;
+end;
+/
+
+declare
+cname currency.name%type;
+begin
+cname:=cur_name(303);
+dbms_output.put_line(cname);
+end;
+/
+
+ 
+INR
+
+PL/SQL procedure successfully completed.
+
+==============================================================================================
+create or replace function equi(val IN currency.b_currency%TYPE)
+return number
+is 
+eq number(10,2);
+cursor c1 is
+select c.name as name,c.b_currency as cur from currency c;
+r c1%rowtype;
+begin
+open c1;
+loop
+fetch c1 into r;
+exit when c1%NOTFOUND;
+eq:=(4/r.cur)*val;
+dbms_output.put_line(r.name||'                               '||eq);
+end loop;
+close c1;
+return null;
+end;
+/
+
+
+declare
+v_a number;
+begin
+v_a:=equi(100);
+end;
+/
+
+===================================================================================================
+
+5)set serveroutput on size 10000;
+create or replace function tog
+   return number is
+    cursor c is
+    select s.training_id as id,m.name as name
+    from
+    (select TRAINING_ID from takes_training group by training_id having count(training_id)>1)s,
+   minion m,
+    takes_training tt
+    where tt.training_id=s.training_id and tt.minion_id=m.minion_id;
+   r1 c%rowtype;
+   begin
+   open c;
+   loop
+   fetch c into r1;
+   exit when c%notfound;
+   dbms_output.put_line(r1.id||'  '||r1.name);
+   end loop;
+   close c;
+   return null;
+   end;
+   /
+
+ declare
+    v_a number;
+    begin
+    v_a:=tog();
+    end;
+    /
+
+403  Phil
+403  Mike
+402  Kevin
+402  Zugi

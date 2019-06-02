@@ -1,0 +1,81 @@
+1)select name from minion where minion_id in
+(
+select minion_id from minion
+minus 
+select minion_id from takes_training
+);
+
+NAME
+---------------
+Bob
+Dave
+Mark
+Liza
+Mike
+Paul
+Lance
+Steve
+
+8 rows selected.
+
+2)select name from master where master_id in(select master_id from master intersect select master_id from involve_in where nationality='Japan');
+
+NAME
+---------------
+Megatron
+
+4) select count(minion_id) from minion where minion_id in(select minion_id from minion minus select trainer from training);
+
+COUNT(MINION_ID)
+----------------
+               8
+
+5) select name from minion where minion_id in(select trainer from training intersect select minion_id from involve_in);
+
+NAME
+---------------
+Bob
+Mike
+
+7) select description from evilness where evil_id in (select evil_id from evilness intersect select evilness from minion where age=8);
+
+DESCRIPTIO
+----------
+humour
+
+8)select description from evilness where evil_id in (select evil_id from evilness intersect select evilness from minion where age>9 or evilness=204);
+
+DESCRIPTIO
+----------
+tickle
+
+9)select mission_id from mission minus select mission_id from involve_in;
+
+MISSION_ID
+----------
+       505
+
+10)
+select mission_id from mission intersect select mission_id from involve_in;
+
+MISSION_ID
+----------
+       501
+       502
+       503
+       504
+12) 
+select name from minion where minion_id in(select minion_id from minion where gender='F' intersect select minion_id from involve_in where mission_id in (select mission_id from payment));
+
+NAME
+---------------
+Zugi
+
+13)select name from minion where minion_id in(select minion_id from minion where gender='F' minus select minion_id from involve_in where mission_id in (select mission_id from payment));
+
+NAME
+---------------
+Liza
+Lance
+
+14)

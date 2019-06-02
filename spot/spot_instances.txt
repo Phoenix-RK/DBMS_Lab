@@ -1,0 +1,40 @@
+insert all 
+into student values(2009103546,'Kiruthya','CSE')
+into student values(2009103555,'Sharanya','CSE')
+into student values(2009103559,'Nandhini','CSE')
+into student values(2009103542,'Kavya','CSE')
+into student values(2009103501,'Aarthy','CSE')
+into student values(2009103532,'Harshini','CSE')
+into student values(2009103582,'Roshini','CSE')
+into student values(2009103592,'Sivapreethi','CSE')
+into student values(2009103534,'Ishwarya','CSE')
+into student values(2009103073,'Vishnu Priya','CSE')
+select * from dual;
+
+
+insert all 
+into course values('CS7401','DBMS',3)
+into course values('CS7402','DAA',3)
+into course values('CS7404','OS',3)
+into course values('CS7403','CA',4)
+into course values('MA7401','PQT',4)
+into course values('CS7490','DBMS LAB',2)
+into course values('CS7491','OS LAB',2)
+into course values('MG7493','POM',2)
+select * from dual;
+
+
+insert all
+into taken values(2009103546,'CS7401','O')
+into taken values(2009103546,'CS7490','A+')
+into taken values(2009103546,'CS7402','O')
+into taken values(2009103542,'CS7401','A+')
+into taken values(2009103542,'MG7493','O')
+into taken values(2009103542,'CS7404','A+')
+into taken values(2009103532,'CS7403','O')
+into taken values(2009103532,'CS7491','O')
+into taken values(2009103073,'CS7401','A+')
+into taken values(2009103534,'MG7493','A+')
+into taken values(2009103555,'CS7404','O')
+into taken values(2009103501,'CS7490','O')
+SELECT * FROM DUAL;

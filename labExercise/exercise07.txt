@@ -1,0 +1,75 @@
+1)select to_char(from_date,'MON DD,YYYY') from mission;
+   to_char   
+-------------
+ JAN 14,2017
+ JAN 16,2017
+ FEB 02,2017
+ DEC 18,2016
+ 
+(5 rows)
+
+2) select to_char(to_date,'DD-MM-YYYY') from training where trainer in(select minion_id from minion where name='Bob'); 
+  to_char   
+------------
+ 24-01-2017
+(1 row)
+
+
+3)select to_char(to_date,'MONTH') from training where training_id in(select training_id from takes_training where minion_id in (select minion_id from minion where name='Phil'));
+  to_char  
+-----------
+ JANUARY  
+(1 row)
+
+4)a)select to_date +7 as start_date from training where elevel=4;
+ start_date 
+------------
+ 2017-02-08
+(1 row)
+
+4)b)select from_date -7+(from_date-to_date) date from training where elevel=2;
+    date    
+------------
+ 2016-12-18
+(1 row)
+
+4)c)select to_date +(to_date-from_date)+7 from training t,takes_training tt where t.training_id=tt.training_id and tt.minion_id=306; 
+  ?column?  
+------------
+ 2017-02-15
+(1 row)
+
+5)SELECT last_day(to_d) from mission where mission_id=502;
+
+LAST_DAY(
+---------
+31-JAN-17
+
+
+7)select round(to_date(paymentdate),'MONTH') from payment where mission_id=504;
+
+ROUND(TO_
+---------
+01-JAN-17
+01-JAN-17
+01-JAN-17
+
+8) select trunc(to_date(paymentdate),'MONTH') from payment where mission_id=504;
+
+TRUNC(TO_
+---------
+01-DEC-16
+01-DEC-16
+01-DEC-16
+
+
+
+9)select trunc(to_date(to_d),'MONTH') from mission where mission_id in (select mission_id from involve_in where minion_id in (select minion_id from minion where name='Stuart' or name='Lance'));
+
+TRUNC(TO_
+---------
+01-JAN-17
+01-FEB-17
+
+
+

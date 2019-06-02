@@ -1,0 +1,528 @@
+3)select * from student where firstName like '%n%a';
+ s_code | firstname | lastname  
+--------+-----------+-----------
+    102 | Upasana   | Nataraj
+    105 | Nainika   | Paavendan
+    108 | Niranjana | Ganesh
+(3 rows)
+
+4)insert into lecture(t_code,l_date,l_code,stud_count) values(304,'08-FEB-2019',204,8);
+
+5) select distinct l.t_code,l.l_code,l.l_date from lecture l
+inner join
+(select t_code from assessment)a
+on a.t_code=l.t_code;
+ t_code | l_code |   l_date   
+--------+--------+------------
+    303 |    202 | 2019-01-02
+    304 |    205 | 2019-01-21
+    301 |    201 | 2018-12-13
+    305 |    201 | 2019-02-01
+    302 |    203 | 2018-12-18
+(5 rows)
+
+
+select r.l_code,g.cnt from lecturer r 
+left join 
+(                               
+select count(l_code) as cnt,l_code from 
+(
+ select distinct l.t_code,l.l_code from lecture l
+inner join
+(select t_code from assessment)a
+on a.t_code=l.t_code)s group by l_code)g on g.l_code=r.l_code;
+ l_code | cnt 
+--------+-----
+    201 |   2
+    202 |   1
+    203 |   1
+    204 |    
+    205 |   1
+(5 rows)
+
+
+
+6)
+select count(l_code) as cnt,l_code from lecture group by l_code;
+ cnt | l_code 
+-----+--------
+   1 |    202
+   1 |    204
+   1 |    205
+   3 |    201
+   1 |    203
+(5 rows)
+
+
+select max(cnt) from (select count(l_code) as cnt,l_code from lecture group by l_code)p;
+ max 
+-----
+   3
+(1 row)
+
+select m.l_code from (select count(l_code) as cnt,l_code from lecture group by l_code)m where cnt in (select max(cnt) from (select count(l_code) as cnt,l_code from lecture group by l_code)p);
+ l_code 
+--------
+    201
+(1 row)
+
+or
+
+ select l_code from lecture l group by(l_code) having count(l_code) in (select max(cnt) from (select count(l_code) as cnt,l_code from lecture group by l_code)p);
+ l_code 
+--------
+    201
+(1 row)
+
+
+
+select r.firstName,r.lastName from lecturer r 
+inner join
+(select m.l_code 
+from (select count(l_code) as cnt,l_code from lecture group by l_code)m 
+where cnt in (select max(cnt) from (select count(l_code) as cnt,l_code from lecture group by l_code)p))c on r.l_code=c.l_code;
+ firstname | lastname 
+-----------+----------
+ Arun      | Kumar
+(1 row)
+
+
+
+
+7)
+select t_code,max(mark) from assessment group by t_code;
+ t_code | max 
+--------+-----
+    304 |   8
+    302 |   7
+    305 |   9
+    303 |   9
+    301 |  10
+(5 rows)
+
+select t.t_code,t.description,p.mark from topic t,(select t_code,max(mark) as mark from assessment a group by t_code)p where t.t_code=p.t_code;
+ t_code |      description      | mark 
+--------+-----------------------+------
+    301 | ER Modelling          |   10
+    302 | Merge Sort            |    7
+    303 | Scheduling Algorithms |    9
+    304 | Queuing techniques    |    8
+    305 | Normalization         |    9
+(5 rows)
+
+
+
+select t.t_code,t.description,s.firstNAme,s.lastName,p.mark from topic t,assessment a,(select t_code,max(mark) as mark from assessment a group by t_code)p,student s where t.t_code=p.t_code and s.s_code=a.s_code and a.t_code=p.t_code and a.mark=p.mark;
+
+ t_code |      description      | firstname | lastname  | mark 
+--------+-----------------------+-----------+-----------+------
+    301 | ER Modelling          | Nainika   | Paavendan |   10
+    302 | Merge Sort            | Niranjana | Ganesh    |    7
+    303 | Scheduling Algorithms | Darsh     | Vasudevan |    9
+    304 | Queuing techniques    | Raakesh   | Raghupati |    8
+    305 | Normalization         | Darsh     | Vasudevan |    9
+(5 rows)
+
+
+
+8)select s_code,count(s_code) as cnt from assessment group by s_code having count(s_code)>2;
+ s_code | cnt 
+--------+-----
+    105 |   3
+
+(1 row)
+
+
+select s.firstName,s.lastName from student s inner join (select s_code,count(s_code) as cnt from assessment group by s_code having count(s_code)>2)p on p.s_code=s.s_code;  
+ firstname | lastname  
+-----------+-----------
+ Nainika   | Paavendan
+(1 row)
+
+
+9)select t_code from topic where description='Normalization';
+ t_code 
+--------
+    305
+(1 row)
+
+select s_code from assessment where t_code in (select t_code from topic where description='Normalization'); 
+ s_code 
+--------
+    106
+    103
+    105
+    108
+(4 rows)
+
+
+select s_code from student except select s_code from assessment where t_code in (select t_code from topic where description='Normalization'); 
+
+
+s_code 
+--------
+    104
+    107
+    109
+    110
+    101
+    102
+(6 rows)
+
+select s.s_code,s.firstName,s.lastName from student s
+inner join
+(select s_code from student except select s_code from assessment where t_code in (select t_code from topic where description='Normalization'))p
+on p.s_code=s.s_code;
+
+s_code | firstname |  lastname   
+--------+-----------+-------------
+    104 | Saatvik   | Sadashiv
+    107 | Harshada  | Krishnan
+    109 | Raakesh   | Raghupati
+    110 | Nakul     | Raghavendra
+    101 | Abhimanyu | ElamPirai
+    102 | Upasana   | Nataraj
+(6 rows)
+
+
+10)select max(stud_count) from lecture;
+max 
+-----
+  15
+(1 row)
+
+select t_code from lecture where stud_count in (select max(stud_count) from lecture);
+ t_code 
+--------
+    302
+(1 row)
+
+postgres=# select t.description from topic t inner join (select t_code from lecture where stud_count in (select max(stud_count) from lecture))p on p.t_code=t.t_code;
+ description 
+-------------
+ Merge Sort
+(1 row)
+
+
+11)
+select t_code from topic where description='Scheduling Algorithms';
+
+t_code 
+--------
+    303
+(1 row)
+
+select mark from assessment where t_code in (select t_code from topic where description='Scheduling Algorithms'); 
+ mark 
+------
+    8
+    9
+    3
+(3 rows)
+
+select max(mark) from
+(
+select mark from assessment where t_code in (select t_code from topic where description='Scheduling Algorithms'))a; 
+ max 
+-----
+   9
+(1 row)
+
+
+select mark from assessment where t_code in (select t_code from topic where description='Scheduling Algorithms') except  
+select max(mark) from
+(
+select mark from assessment where t_code in (select t_code from topic where description='Scheduling Algorithms'))a; 
+ mark 
+------
+    8
+    3
+(2 rows)
+
+ select max(mark) from (
+ select mark from assessment where t_code in (select t_code from topic where description='Scheduling Algorithms') except  
+select max(mark) from
+(
+select mark from assessment where t_code in (select t_code from topic where description='Scheduling Algorithms'))a)p; 
+ max 
+-----
+   8
+(1 row)
+
+
+
+12)
+
+select t_code,l_date from lecture intersect select t_code,l_date from assessment;
+ t_code |   l_date   
+--------+------------
+    302 | 2018-12-18
+    301 | 2018-12-13
+    303 | 2019-01-02
+    304 | 2019-01-21
+    305 | 2019-02-01
+(5 rows)
+
+
+
+select distinct f.firstName,f.lastName from lecturer f inner join
+(select l.t_code,l.l_code from lecture l inner join
+(select t_code,l_date from lecture intersect select t_code,l_date from assessment)p
+on l.t_code=p.t_code)m
+on m.l_code=f.l_code;
+ firstname | lastname  
+-----------+-----------
+ Chitra    | Vasudevan
+ Arun      | Kumar
+ Balaji    | Ganesh
+ Devi      | Priya
+ Eliza     | Edwards
+(5 rows)
+
+
+
+
+
+
+13)select l.firstName,l.lastName,s.firstName,s.lastName from student s,lecturer l where l.lastNAme=s.lastName;
+
+firstname | lastname  | firstname | lastname  
+-----------+-----------+-----------+-----------
+ Chitra    | Vasudevan | Darsh     | Vasudevan
+ Balaji    | Ganesh    | Niranjana | Ganesh
+(2 rows)
+
+
+14)select * from assessment where l_date between '01-JAN-2019' and '07-JAN-2019';
+
+t_code |   l_date   | s_code | mark 
+--------+------------+--------+------
+    303 | 2019-01-02 |    106 |    8
+    303 | 2019-01-02 |    103 |    9
+    303 | 2019-01-02 |    101 |    3
+(3 rows)
+
+
+15)
+
+select distinct t_code from assessment;
+ t_code 
+--------
+    304
+    302
+    305
+    303
+    301
+(5 rows)
+
+
+select t_code from lecture
+except
+select distinct t_code from assessment;
+ t_code 
+--------
+    306
+(1 row)
+
+
+ select t.description from topic t
+inner join
+(
+select t_code from lecture
+except
+select distinct t_code from assessment)a
+on t.t_code=a.t_code;
+ description 
+-------------
+ PQT
+(1 row)
+
+
+16)
+select * from student where firstName like 'N%'or firstName like 'S%';
+ s_code | firstname |  lastname   
+--------+-----------+-------------
+    104 | Saatvik   | Sadashiv
+    105 | Nainika   | Paavendan
+    110 | Nakul     | Raghavendra
+    108 | Niranjana | Ganesh
+(4 rows)
+
+
+ select a.mark,x.s_code,x.firstName,x.lastName from assessment a,(
+postgres(# select * from student where firstName like 'N%'or firstName like 'S%')x where a.s_code=x.s_code;
+ mark | s_code | firstname |  lastname   
+------+--------+-----------+-------------
+   10 |    105 | Nainika   | Paavendan
+    4 |    110 | Nakul     | Raghavendra
+    7 |    108 | Niranjana | Ganesh
+    5 |    105 | Nainika   | Paavendan
+    7 |    110 | Nakul     | Raghavendra
+    7 |    105 | Nainika   | Paavendan
+    6 |    108 | Niranjana | Ganesh
+
+
+
+ select x.s_code,x.firstName,x.lastName,t.t_code,t.description,a.mark from topic t,assessment a,(
+select * from student where firstName like 'N%'or firstName like 'S%')x where a.s_code=x.s_code and a.t_code=t.t_code;
+ s_code | firstname |  lastname   | t_code |    description     | mark 
+--------+-----------+-------------+--------+--------------------+------
+    105 | Nainika   | Paavendan   |    301 | ER Modelling       |   10
+    110 | Nakul     | Raghavendra |    301 | ER Modelling       |    4
+    108 | Niranjana | Ganesh      |    302 | Merge Sort         |    7
+    105 | Nainika   | Paavendan   |    302 | Merge Sort         |    5
+    110 | Nakul     | Raghavendra |    304 | Queuing techniques |    7
+    105 | Nainika   | Paavendan   |    305 | Normalization      |    7
+    108 | Niranjana | Ganesh      |    305 | Normalization      |    6
+(7 rows)
+
+
+select x.s_code,x.firstName as s_firstName,x.lastName as s_lastName,t.t_code,t.description,a.mark,l.firstName as l_firstName,l.lastName as l_lastName from lecturer l,lecture r,topic t,assessment a,(
+select * from student where firstName like 'N%'or firstName like 'S%')x where a.s_code=x.s_code and a.t_code=t.t_code and a.t_code=r.t_code and r.l_code=l.l_code;
+ s_code | s_firstname | s_lastname  | t_code |    description     | mark | l_firstname | l_lastname 
+--------+-------------+-------------+--------+--------------------+------+-------------+------------
+    105 | Nainika     | Paavendan   |    301 | ER Modelling       |   10 | Arun        | Kumar
+    110 | Nakul       | Raghavendra |    301 | ER Modelling       |    4 | Arun        | Kumar
+    108 | Niranjana   | Ganesh      |    302 | Merge Sort         |    7 | Chitra      | Vasudevan
+    105 | Nainika     | Paavendan   |    302 | Merge Sort         |    5 | Chitra      | Vasudevan
+    110 | Nakul       | Raghavendra |    304 | Queuing techniques |    7 | Eliza       | Edwards
+    105 | Nainika     | Paavendan   |    305 | Normalization      |    7 | Arun        | Kumar
+    108 | Niranjana   | Ganesh      |    305 | Normalization      |    6 | Arun        | Kumar
+(7 rows)
+
+
+create view grade_sheet as
+postgres-# select x.s_code,x.firstName as s_firstName,x.lastName as s_lastName,t.t_code,t.description,a.mark,l.firstName as l_firstName,l.lastName as l_lastName from lecturer l,lecture r,topic t,assessment a,(
+select * from student where firstName like 'N%'or firstName like 'S%')x where a.s_code=x.s_code and a.t_code=t.t_code and a.t_code=r.t_code and r.l_code=l.l_code;
+CREATE VIEW
+
+ select * from grade_sheet;
+ s_code | s_firstname | s_lastname  | t_code |    description     | mark | l_firstname | l_lastname 
+--------+-------------+-------------+--------+--------------------+------+-------------+------------
+    105 | Nainika     | Paavendan   |    301 | ER Modelling       |   10 | Arun        | Kumar
+    110 | Nakul       | Raghavendra |    301 | ER Modelling       |    4 | Arun        | Kumar
+    108 | Niranjana   | Ganesh      |    302 | Merge Sort         |    7 | Chitra      | Vasudevan
+    105 | Nainika     | Paavendan   |    302 | Merge Sort         |    5 | Chitra      | Vasudevan
+    110 | Nakul       | Raghavendra |    304 | Queuing techniques |    7 | Eliza       | Edwards
+    105 | Nainika     | Paavendan   |    305 | Normalization      |    7 | Arun        | Kumar
+    108 | Niranjana   | Ganesh      |    305 | Normalization      |    6 | Arun        | Kumar
+(7 rows)
+
+
+
+ 17)
+
+select l_code from lecturer where firstname='Balaji';
+ l_code 
+--------
+    202
+(1 row)
+
+select t_code from lecture where l_code in(
+select l_code from lecturer where firstname='Balaji');
+ t_code 
+--------
+    303
+(1 row)
+
+select * from assessment where t_code in
+(select t_code from lecture where l_code in(
+select l_code from lecturer where firstname='Balaji'));
+ t_code |   l_date   | s_code | mark 
+--------+------------+--------+------
+    303 | 2019-01-02 |    101 |    3
+    303 | 2019-01-02 |    103 |    9
+    303 | 2019-01-02 |    106 |    8
+(3 rows)
+
+
+18)
+
+select s_code from student where firstname='Abhimanyu';
+ s_code 
+--------
+    101
+(1 row)
+
+select t_code,s_code,mark from assessment where s_code in(
+select s_code from student where firstname='Abhimanyu');
+ t_code | s_code | mark 
+--------+--------+------
+    301 |    101 |    8
+    303 |    101 |    3
+(2 rows)
+
+ select s.firstname,a.t_code,a.mark from student s,assessment a where a.s_code in(
+select s_code from student where firstname='Abhimanyu') and a.s_code=s.s_code;
+ firstname | t_code | mark 
+-----------+--------+------
+ Abhimanyu |    301 |    8
+ Abhimanyu |    303 |    3
+(2 rows)
+
+
+select s.firstname,a.t_code,t.description,a.mark from student s,assessment a,topic t where a.s_code in(
+select s_code from student where firstname='Abhimanyu') and a.s_code=s.s_code and a.t_code=t.t_code;
+ firstname | t_code |      description      | mark 
+-----------+--------+-----------------------+------
+ Abhimanyu |    301 | ER Modelling          |    8
+ Abhimanyu |    303 | Scheduling Algorithms |    3
+(2 rows)
+
+ select s.firstname,t.description,a.mark from student s,assessment a,topic t where a.s_code in(
+select s_code from student where firstname='Abhimanyu') and a.s_code=s.s_code and a.t_code=t.t_code;
+ firstname |      description      | mark 
+-----------+-----------------------+------
+ Abhimanyu | ER Modelling          |    8
+ Abhimanyu | Scheduling Algorithms |    3
+(2 rows)
+
+
+create view abhimanyu_mark as
+postgres-# select s.firstname,t.description,a.mark from student s,assessment a,topic t where a.s_code in(
+select s_code from student where firstname='Abhimanyu') and a.s_code=s.s_code and a.t_code=t.t_code;
+CREATE VIEW
+
+
+postgres=# select * from abhimanyu_mark;
+ firstname |      description      | mark 
+-----------+-----------------------+------
+ Abhimanyu | ER Modelling          |    8
+ Abhimanyu | Scheduling Algorithms |    3
+(2 rows)
+
+
+
+
+
+19)
+
+
+
+
+20)
+select stud_count,t_code from lecture order by stud_count asc offset 4; 
+ stud_count | t_code 
+------------+--------
+         12 |    306
+         14 |    305
+         15 |    302
+(3 rows)
+
+select * from (select stud_count,t_code from lecture order by stud_count asc offset 4)p order by stud_count desc;
+ stud_count | t_code 
+------------+--------
+         15 |    302
+         14 |    305
+         12 |    306
+(3 rows)
+
+
+
+
+
+
+
+
+
+

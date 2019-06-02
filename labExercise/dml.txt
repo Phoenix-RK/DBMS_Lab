@@ -1,0 +1,72 @@
+INSERT INTO evilness(evil_id, elevel, description) VALUES (201, 1, 'SNEEZE');
+INSERT INTO evilness(evil_id, elevel, description) VALUES (202, 2, 'ITCH');
+INSERT INTO evilness(evil_id, elevel, description) VALUES (203, 3, 'TICKLE');
+INSERT INTO evilness(evil_id, elevel, description) VALUES (204, 4, 'YAWN');
+
+INSERT INTO minion(minion_id, name, gender, age, nationality, hiring_charge, evilness)VALUES (301,'Stuart','M',6,'USA',100,203);
+INSERT INTO minion(minion_id, evilness, name, gender, age, nationality, hiring_charge)VALUES (302,204,'Bob','M',8,'Japan',140);
+INSERT INTO minion(minion_id, evilness, name, gender, age, nationality, hiring_charge)VALUES (303,202,'kevin','M',4,'India',75);
+INSERT INTO minion(minion_id, evilness, name, gender, age, nationality, hiring_charge)VALUES (304,204,'Dave','M',9,'Russia',120);
+INSERT INTO minion(minion_id, evilness, name, gender, age, nationality, hiring_charge)VALUES (305,202,'Mark','M',5,'Germany',80);
+INSERT INTO minion(minion_id, evilness, name, gender, age, nationality, hiring_charge)VALUES (306,201,'Phil','M',10,'USA',90);
+INSERT INTO minion(minion_id, evilness, name, gender, age, nationality, hiring_charge)VALUES (307,204,'Liza','F',3,'Japan',150);
+INSERT INTO minion(minion_id, evilness, name, gender, age, nationality, hiring_charge)VALUES (308,203,'Mike','M',6,'India',90);
+INSERT INTO minion(minion_id, evilness, name, gender, age, nationality, hiring_charge)VALUES (309,202,'Paul','M',9,'Russia',85);
+INSERT INTO minion(minion_id, evilness, name, gender, age, nationality, hiring_charge)VALUES (310,204,'Lance','F',6,'England',70);
+INSERT INTO minion(minion_id, evilness, name, gender, age, nationality, hiring_charge)VALUES (311,202,'Zugi','F',9,'India',90);
+INSERT INTO minion(minion_id, evilness, name, gender, age, nationality, hiring_charge)VALUES (312,203,'Steve','M',7,'USA',110);
+
+INSERT INTO master(master_id, name, mtype, nationality)VALUES(101,'Adolf Hitler','person','Germany');
+INSERT INTO master(master_id, name, mtype, nationality)VALUES(102,'Gru','cartoon','USA');
+INSERT INTO master(master_id, name, mtype, nationality)VALUES(103,'Frankenstein','fictional','England');
+INSERT INTO master(master_id, name, mtype, nationality)VALUES(104,'Ivan Dracula','fictional','Russia');
+INSERT INTO master(master_id, name, mtype, nationality)VALUES(105,'Osama','person','Saudi Arabia');
+INSERT INTO master(master_id, name, mtype, nationality)VALUES(106,'Nero','cartoon','Europe');
+INSERT INTO master(master_id, name, mtype, nationality)VALUES(107,'Mojo Jojo','cartoon','USA');
+INSERT INTO master(master_id, name, mtype, nationality)VALUES(108,'Loki','fictional','USA');
+INSERT INTO master(master_id, name, mtype, nationality)VALUES(109,'Lex Luthor','fictional','USA');
+INSERT INTO master(master_id, name, mtype, nationality)VALUES(110,'Megatron','cartoon','Japan');
+
+
+INSERT INTO training( training_id,elevel,trainer,from_date, to_date)VALUES (401,4,304,'05-JAN-2017','15-JAN-2017');
+INSERT INTO training( training_id,elevel,trainer,from_date, to_date)VALUES (402,3,312,'07-JAN-2017','10-JAN-2017');
+INSERT INTO training( training_id,elevel,trainer,from_date, to_date)VALUES (403,2,302,'09-JAN-2017','24-JAN-2017');
+INSERT INTO training( training_id,elevel,trainer,from_date, to_date)VALUES (404,1,308,'11-JAN-2017','15-JAN-2017');
+
+
+
+INSERT INTO mission(mission_id, pre_req, minion_count, country, estimate, status, from_date, to_date)VALUES(501,403,1,'Japan',1200,'underway','14-JAN-17','18-JAN-17');
+INSERT INTO mission(mission_id, pre_req, minion_count, country, estimate, status, from_date, to_date)VALUES(502,404,2,'USA',2500,'underway','16-JAN-17','22-JAN-17');
+INSERT INTO mission(mission_id, pre_req, minion_count, country, estimate, status, from_date, to_date)VALUES(503,403,1,'England',2200,'underway','02-FEB-17','10-FEB-17');
+INSERT INTO mission(mission_id, pre_req, minion_count, country, estimate, status, from_date, to_date)VALUES(504,402,3,'India',2400,'completed','18-DEC-16','27-DEC-16');
+INSERT INTO mission(mission_id, pre_req, minion_count, country, estimate, status) VALUES(505,404,4,'China',4000,'cancelled');
+
+
+INSERT INTO minion_involved_in_mission(minion_id, mission_id, master_id)VALUES(302,501,110);
+INSERT INTO minion_involved_in_mission(minion_id, mission_id, master_id)VALUES(301,502,107);
+INSERT INTO minion_involved_in_mission(minion_id, mission_id, master_id)VALUES(306,502,107);
+INSERT INTO minion_involved_in_mission(minion_id, mission_id, master_id)VALUES(310,503,103);
+INSERT INTO minion_involved_in_mission(minion_id, mission_id, master_id)VALUES(303,504,104);
+INSERT INTO minion_involved_in_mission(minion_id, mission_id, master_id)VALUES(308,504,104);
+INSERT INTO minion_involved_in_mission(minion_id, mission_id, master_id)VALUES(311,504,104);
+
+
+INSERT INTO takes_training(training_id, minion_id)VALUES (402,303);
+INSERT INTO takes_training(training_id, minion_id)VALUES (401,301);
+INSERT INTO takes_training(training_id, minion_id)VALUES (403,306);
+INSERT INTO takes_training(training_id, minion_id)VALUES (402,311);
+
+
+INSERT INTO currency(currency_id, name, country, b_currency) VALUES (601,'INR','India',4);
+INSERT INTO currency(currency_id, name, country, b_currency) VALUES(602,'Japanese','YEN Japan',8);
+INSERT INTO currency(currency_id, name, country, b_currency) VALUES(603,'Euro','Germany',4.5);
+INSERT INTO currency(currency_id, name, country, b_currency) VALUES(604,'USD','USA',7);
+INSERT INTO currency(currency_id, name, country, b_currency) VALUES(605,'Pound Sterling','England',9.5);
+INSERT INTO currency(currency_id, name, country, b_currency) VALUES(606,'Ruble','Russia',12);
+INSERT INTO currency(currency_id, name, country, b_currency) VALUES(607,'Riyal','Saudi Arabia',10);
+
+
+
+INSERT INTO payment(mission_id, payment_id, currency_id, amount, date_of_payment)VALUES (504,7303,601,765,'27-DEC-2016');
+INSERT INTO payment(mission_id, payment_id, currency_id, amount, date_of_payment)VALUES (504,7308,601,765,'27-DEC-2016');
+INSERT INTO payment(mission_id, payment_id, currency_id, amount, date_of_payment)VALUES (504,7311,601,637.5,'27-DEC-2016');

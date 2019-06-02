@@ -1,0 +1,247 @@
+=====================================================================================
+1)SET SERVEROUTPUT ON SIZE 1000000
+DECLARE
+           mi_name MINION.NAME%type;
+           ma_name MASTER.NAME%type;
+               CURSOR minion_cursor IS
+           SELECT m.name as minion,ma.name as master
+    into  mi_name,ma_name
+    from minion m,master ma
+    where m.nationality='England' and ma.nationality='England';
+       BEGIN
+          open minion_cursor;
+          LOOP
+          FETCH minion_cursor into mi_name,ma_name;
+          EXIT WHEN minion_cursor%NOTFOUND;
+          dbms_output.put_line(mi_name||' '||ma_name);
+           END LOOP;
+         close minion_cursor;
+      END;
+      /
+Lance Frankenstein
+
+PL/SQL procedure successfully completed.
+=======================================================================================
+2)SET SERVEROUTPUT ON SIZE 1000000
+DECLARE
+        m_name MINION%ROWTYPE;
+               CURSOR hire_cursor IS
+         select * into m_name from (select * from minion where evilness in (select evil_id from evilness where description='tickle') order by hiring_charge) where rownum=1;
+       BEGIN
+          open hire_cursor;
+          LOOP
+          FETCH hire_cursor into m_name;
+          EXIT WHEN hire_cursor%NOTFOUND;
+          dbms_output.put_line(m_name. name);
+           END LOOP;
+         close hire_cursor;
+      END;
+      /
+Mike
+
+PL/SQL procedure successfully completed.
+=====================================================================================
+3)SET SERVEROUTPUT ON SIZE 1000000
+DECLARE
+      mi mission%ROWTYPE;
+               CURSOR miss_cur IS
+          select * from mission  where country <>'Germany';
+  BEGIN
+          open miss_cur;
+ dbms_output.put_line('ID');
+          LOOP
+          FETCH miss_cur into mi;
+          EXIT WHEN miss_cur%NOTFOUND;
+          dbms_output.put_line(mi.mission_id);
+           END LOOP;
+         close miss_cur;
+      END;
+      /
+ID
+501
+502
+503
+504
+505
+============================================================================================
+4) select  training_id,months_between(to_d,from_d) from training where trainer in(select minion_id from minion where name='Bob' or name ='Steve');
+SET SERVEROUTPUT ON SIZE 1000000
+DECLARE
+train_id training%ROWTYPE;
+     months number;
+CURSOR trains is
+select * from training where trainer in(select minion_id from minion where name='Bob' or name ='Steve');
+CURSOR month is select months_between(to_d,from_d) from training where trainer in(select minion_id from minion where name='Bob' or name ='Steve');
+BEGIN
+open trains;
+open month;
+
+LOOP
+fetch trains into train_id;
+exit when trains%NOTFOUND;
+fetch month into months;
+exit when month%NOTFOUND;
+   dbms_output.put_line(train_id.training_id||' '||months);
+END LOOP;
+close trains;
+close month;
+  END;
+    /
+
+403 .4838709677419354838709677419354838709677
+402 .0967741935483870967741935483870967741935
+================================================================================================
+5)
+
+SET SERVEROUTPUT ON SIZE 1000000
+DECLARE
+           
+                      CURSOR cancel IS
+select mi.estimate-mi.m_count*10 as charge from mission mi where mi.status='cancelled';
+canc cancel%rowtype;
+
+           BEGIN
+          open cancel;
+          LOOP
+          FETCH cancel into canc;
+          EXIT WHEN cancel%NOTFOUND;
+          dbms_output.put_line(canc.charge);
+           END LOOP;
+
+         close cancel;
+      END;
+      /
+
+3960
+
+===============================================================
+6)SET SERVEROUTPUT ON SIZE 1000000
+DECLARE
+     amt payment.amount%type;  
+      est  mission.estimate%type;
+      CURSOR pay_cur IS
+	select sum(amount) as sum into amt from payment;
+	cursor esti is select estimate into est from mission where mission_id=504;
+BEGIN
+          open pay_cur;
+          open esti;
+          FETCH pay_cur into amt;
+          FETCH esti into est;
+     if(amt<=est)
+	then
+          dbms_output.put_line('DOESNT CROSS');
+         else
+           dbms_output.put_line('cross');
+     end if;     
+        close pay_cur;
+        close esti;
+  END;
+    /
+cross
+
+==============================================================================================================
+7)1)SET SERVEROUTPUT ON SIZE 1000000
+DECLARE
+           mi_name MINION.NAME%type;
+                      CURSOR minion_cursor IS
+          select mi.name from minion mi where minion_id in(select minion_id from involve_in group by minion_id having count(minion_id)>1);
+       BEGIN
+          open minion_cursor;
+          LOOP
+          FETCH minion_cursor into mi_name;
+          EXIT WHEN minion_cursor%NOTFOUND;
+          dbms_output.put_line(mi_name);
+           END LOOP;
+dbms_output.put_line('NO rows selected');
+         close minion_cursor;
+      END;
+      /
+
+2)SET SERVEROUTPUT ON SIZE 1000000
+DECLARE
+           mi_name MINION.NAME%type;
+                      CURSOR minion_cursor IS
+          select mi.name from minion mi where minion_id in(select minion_id from involve_in group by minion_id having count(minion_id)>=1);
+       BEGIN
+          open minion_cursor;
+          LOOP
+          FETCH minion_cursor into mi_name;
+          EXIT WHEN minion_cursor%NOTFOUND;
+          dbms_output.put_line(mi_name);
+           END LOOP;
+
+         close minion_cursor;
+      END;
+      /
+Kevin
+Lance
+Zugi
+Phil
+Mike
+Stuart
+Bob
+
+
+3)
+SET SERVEROUTPUT ON SIZE 1000000
+DECLARE
+           mi_name MINION.NAME%type;
+                      CURSOR minion_cursor IS
+          select mi.name from minion mi minus select m.name from minion m where minion_id in(select minion_id from involve_in group by minion_id having count(minion_id)=1);
+       BEGIN
+          open minion_cursor;
+          LOOP
+          FETCH minion_cursor into mi_name;
+          EXIT WHEN minion_cursor%NOTFOUND;
+          dbms_output.put_line(mi_name);
+           END LOOP;
+
+         close minion_cursor;
+      END;
+      /
+Dave
+Hedwig
+Liza
+Mark
+Paul
+Steve
+PL/SQL procedure successfully completed.
+===================================================================
+
+8)
+SET SERVEROUTPUT ON SIZE 1000000
+DECLARE
+ CURSOR curr IS
+select name,b_currency/4 as val from currency;
+cur curr%rowtype;
+
+           BEGIN
+          open curr;
+ dbms_output.put_line('Name'||'                 '||'Value');
+          LOOP
+          FETCH curr into cur;
+          EXIT WHEN curr%NOTFOUND;
+          dbms_output.put_line(cur.name||'              '||cur.val);
+           END LOOP;
+
+         close curr;
+      END;
+      /
+Name                 Value
+INR              1
+Japanese YEN              2
+Euro              1.125
+USD              1.75
+Pound Sterling              2.375
+Ruble              3
+Riyal              2.5
+
+
+Name                 Value
+INR              1
+Japanese YEN              .5
+Euro              .8888888888888888888888888888888888888889
+USD              .5714285714285714285714285714285714285714
+Pound Sterling              .4210526315789473684210526315789473684211
+Ruble              .3333333333333333333333333333333333333333
+Riyal              .4

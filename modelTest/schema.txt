@@ -1,0 +1,45 @@
+create table lecturer(
+l_code int primary key,
+firstName varchar(40),
+lastName varchar(40)
+);
+
+
+create table topic(
+t_code int primary key,
+description varchar(40)
+);
+
+
+
+create table lecture(
+t_code int,
+l_date date,
+l_code int,
+stud_count int,
+
+foreign key(t_code) references topic(t_code),
+foreign key(l_code) references lecturer(l_code),
+primary key(t_code,l_code)
+);
+
+
+
+create table student(
+s_code int primary key,
+firstName varchar(40),
+lastName varchar(40)
+);
+
+
+
+create  table assessment(
+t_code int,
+l_date date,
+s_code int,
+mark int,
+
+foreign key(t_code) references topic(t_code),
+foreign key(s_code) references student(s_code), 
+primary key(t_code,l_date,s_code)
+);

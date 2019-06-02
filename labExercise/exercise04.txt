@@ -1,0 +1,92 @@
+						EXERCISE_04
+						DBMS LAB
+
+											R.KIRUTHYA
+											2017103546
+01)select * from master where nationality='USA';
+
+02)select * from master where nationality='England' and mtype='fictional';
+
+03)select max(elevel) from evilness;
+
+04)select * from minion where gender='M' and evilness>=202; 
+
+05)select name from minion where evilness=203 and hiring_charge>95;
+
+06)select name from minion where age in (select max(age) from minion);
+
+07)select name from minion where age in (select min(age) from minion);
+
+08)select avg(hiring_charge) from minion;
+
+
+09)
+select name
+from minion 
+where minion_id in 
+(select trainer 
+from training 
+where elevel=1
+);
+
+10)select country,estimate from mission where mission_id=501;
+
+11)select count(status) from mission where status='underway';
+ 
+12)select country from mission where mission_id=504;
+ 
+13) 
+select name
+from master 
+where master_id in 
+(select master_id 
+from minion_involved_in_mission 
+where mission_id=502
+);
+   
+
+14)
+a)
+select count(minion_id)
+from minion_involved_in_mission
+where mission_id=502;
+b)
+ select name 
+ from minion 
+ where minion_id in 
+ (
+ select minion_id 
+ from minion_involved_in_mission
+ where mission_id=502
+ );
+
+16)select mission_id from mission where from_date >'10-JAN-2016' and to_date <'31-JAN-2016';
+
+17)select name 
+   from master
+   where master_id in 
+   (select master_id 
+    from minion_involved_in_mission
+    where mission_id is not null);
+
+18)select name from currency where country='England';
+
+
+19)select name from currency where b_currency in (select max(b_currency) from currency);     
+
+20)
+ select name
+ from minion
+ where evilness in
+ (select evil_id
+ from evilness
+ where elevel in
+ (select elevel
+ from training
+ where training_id in
+ (select pre_req
+ from mission
+ where mission_id=501
+ )
+ )
+ );

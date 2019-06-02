@@ -1,0 +1,102 @@
+1.
+create or replace trigger increment_evil
+before insert
+on evilness
+for each row
+declare
+cursor c_evil is
+select * from evilness where power>=:new.power;
+r_evil c_evil%rowtype;
+begin
+open c_evil;
+loop
+fetch c_evil into r_evil;
+exit when c_evil%notfound;
+update evilness set power=power+1 where evil_id=r_evil.evil_id;
+end loop;
+close c_evil;
+end;
+/
+insert into evilness values(205,2,'sleep');
+
+SQL> select * from evilness;
+
+   EVIL_ID      POWER DESCRIPTION
+---------- ---------- --------------------
+       205          2 sleep
+       201          1 sneeze
+       202          3 itch
+       203          4 tickle
+       204          5 yawn
+2.
+set serveroutput on size 100000
+create or replace trigger training_courses
+before insert on training
+for each row
+declare
+cursor c_train is
+select * from evilness where evil_id in(
+select evil_id from training where trainer=:new.trainer
+);
+r_train c_train%rowtype;
+begin
+open c_train;
+loop
+fetch c_train into r_train;
+exit when c_train%notfound;
+dbms_output.put_line(r_train.description);
+end loop;
+close c_train;
+end;
+/
+3.
+create table currency_rate_history(
+currency_id number(3) primary key,
+rate number(10,3),
+date_d date
+);
+create or replace trigger curr_trigger
+before update 
+of b_currency
+on currency
+for each row
+begin
+insert into currency_rate_history values(:old.currency_id,:old.b_currency,sysdate);
+end;
+/
+update currency set b_currency=11 where currency_id=607;
+4.
+5.
+6.
+create table takes_training_history(
+training_id number(4),
+minion_id number(4),
+primary key(training_id,minion_id),
+foreign key(training_id) references training(training_id),
+foreign key(minion_id) references minion(minion_id)
+);
+
+create or replace trigger training_history
+before delete on takes_training
+for each row
+begin
+insert into takes_training_history values(:old.training_id,:old.minion_id);
+end;
+/
+
+TRAINING_ID  MINION_ID
+----------- ----------
+        401        301
+        402        303
+        402        311
+        403        306
+        403        307
+
+delete from takes_training where training_id=403 and minion_id=307;
+
+SQL> select * from takes_training_history;
+
+TRAINING_ID  MINION_ID
+----------- ----------
+        403        307
+

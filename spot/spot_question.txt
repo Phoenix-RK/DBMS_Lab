@@ -1,0 +1,16 @@
+Spot Question
+
+(Use the Schema given in spot_schema)
+
+1)Find the name of the student and the name of the course registered by each student
+
+2)Find the students who are yet to register any course
+
+3)Find the course which has maximum registration
+
+4)Find the course which has NIL registration
+
+5)Name the student who has maximum registrations
+
+6)With respect to each subject find the student who have the maximum grade
+

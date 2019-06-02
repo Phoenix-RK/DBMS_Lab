@@ -1,0 +1,153 @@
+1)CREATE VIEW minion_trained as
+select name from minion where minion_id in
+(select trainer from training where training_id in
+(select training_id from takes_training having count(training_id)>1 group by training_id)); 
+
+
+select * from minion_trained;
+
+NAME
+---------------
+Steve
+
+2)create view curr as
+select name from (select * from currency order by b_currency desc) where rownum<=3;
+
+
+View created.
+
+SQL> select * from curr;
+
+NAME
+---------------
+Ruble
+Riyal
+Pound Sterling
+
+3)create view req_minion as
+select name from minion where  minion_id in 
+(select minion_id from involve_in) and (nationality='England' or nationality='Japan') and gender='M';
+
+select * from req_minion;
+
+NAME
+---------------
+Bob
+
+4)create view evil as
+   select m.name,m.evilness,m.hiring_charge,e.description from minion m,evilness e
+   where e.evil_id=m.evilness;
+
+
+View created.
+
+SQL> select * from evil;
+
+NAME              EVILNESS HIRING_CHARGE DESCRIPTIO
+--------------- ---------- ------------- ----------
+Stuart                 201           100 sneeze
+Phil                   201            90 sneeze
+Zugi                   202            90 cough
+Mark                   202            80 cough
+Paul                   202            85 cough
+Steve                  203           110 humour
+Bob                    203           140 humour
+Mike                   203            90 humour
+Lance                  204            70 tickle
+Dave                   204           120 tickle
+Kevin                  204            75 tickle
+
+NAME              EVILNESS HIRING_CHARGE DESCRIPTIO
+--------------- ---------- ------------- ----------
+Liza                   204           150 tickle
+
+
+5)
+
+create view five_view as
+select mi.name as minion,ma.name as master from minion mi,master ma,
+(select minion_id,master_id from involve_in where mission_id in
+ (select mission_id from mission where status='underway')) s
+where mi.minion_id=s.minion_id and ma.master_id=s.master_id;
+
+View created.
+
+SQL> select * from five_view;
+
+MINION          MASTER
+--------------- ---------------
+Stuart          Mojo Jojo
+Bob             Megatron
+Phil            Mojo Jojo
+Lance           Frankenstein
+
+6)create view succ_master as
+select name from master where master_id in
+(select master_id from involve_in where mission_id in 
+(
+select mission_id from mission where status='completed'
+)
+);
+
+View created.
+
+SQL> select * from succ_master;
+
+NAME
+---------------
+Ivan Dracula
+
+
+7) savepoint A;
+
+Savepoint created.
+
+8)
+SQL> insert into takes_training values(403,308);
+
+1 row created.
+
+SQL> select * from minion_trained;
+
+NAME
+---------------
+Bob
+Steve
+
+9)SQL> select * from req_minion;
+
+NAME
+---------------
+Bob
+
+10)create view ten_view as
+select * from payment where
+mission_id is not null and payment_id is not null
+with check option;
+View created.
+
+SQL> select * from ten_view;
+
+MISSION_ID PAYMENT_ID CURRENCY_ID     AMOUNT PAYMENTDA
+---------- ---------- ----------- ---------- ---------
+       504       7303         601        765 27-DEC-16
+       504       7308         601        765 27-DEC-16
+       504       7311         601      637.5 27-DEC-16
+
+ insert into ten_view (mission_id,payment_id,amount) values (504,7317,890);
+
+1 row created.
+
+SQL> select * from ten_view;
+
+MISSION_ID PAYMENT_ID CURRENCY_ID     AMOUNT PAYMENTDA
+---------- ---------- ----------- ---------- ---------
+       504       7317                    890
+       504       7303         601        765 27-DEC-16
+       504       7308         601        765 27-DEC-16
+       504       7311         601      637.5 27-DEC-16
+
+
+    create view stu_view as
+    select * from student1
+    where stud_id is not null;

@@ -1,0 +1,54 @@
+insert into lecturer(l_code,firstName,lastName) values(201, 'Arun', 'Kumar');
+ insert into lecturer(l_code,firstName,lastName) values(202, 'Balaji', 'Ganesh');
+ insert into lecturer(l_code,firstName,lastName) values(203, 'Chitra', 'Vasudevan');
+ insert into lecturer(l_code,firstName,lastName) values(204, 'Devi', 'Priya');
+insert into lecturer(l_code,firstName,lastName) values(205, 'Eliza', 'Edwards');
+
+
+
+insert into topic(t_code,description) values(301,'ER Modelling');
+insert into topic(t_code,description) values(302, 'Merge Sort');
+insert into topic(t_code,description) values(303, 'Scheduling Algorithms');
+insert into topic(t_code,description) values(304, 'Queuing techniques');
+insert into topic(t_code,description) values(305, 'Normalization');
+insert into topic(t_code,description) values(306, 'PQT');
+
+
+
+insert into lecture(t_code,l_date,l_code,stud_count) values(301,'13-DEC-2018',201,10);
+insert into lecture(t_code,l_date,l_code,stud_count) values(302,'18-DEC-2018',203,15);
+insert into lecture(t_code,l_date,l_code,stud_count) values(303,'02-JAN-2019',202,12);
+insert into lecture(t_code,l_date,l_code,stud_count) values(304,'21-JAN-2019',205,10);
+insert into lecture(t_code,l_date,l_code,stud_count) values(305,'01-FEB-2019',201,14);
+insert into lecture(t_code,l_date,l_code,stud_count) values(306,'28-JAN-2019',201,12);
+
+
+insert into student(s_code,firstName,lastName) values(101, 'Abhimanyu' ,'ElamPirai');
+insert into student(s_code,firstName,lastName) values(102, 'Upasana' ,'Nataraj');
+insert into student(s_code,firstName,lastName) values(103, 'Darsh' ,'Vasudevan');
+insert into student(s_code,firstName,lastName) values(104, 'Saatvik' ,'Sadashiv');
+insert into student(s_code,firstName,lastName) values(105, 'Nainika' ,'Paavendan');
+insert into student(s_code,firstName,lastName) values(106, 'Jagan' ,'Hamsavahini');
+insert into student(s_code,firstName,lastName) values(107, 'Harshada' ,'Krishnan');
+insert into student(s_code,firstName,lastName) values(108, 'Niranjana' ,'Ganesh');
+insert into student(s_code,firstName,lastName) values(109 ,'Raakesh' ,'Raghupati');
+insert into student(s_code,firstName,lastName) values(110 ,'Nakul' ,'Raghavendra');
+
+
+
+insert into assessment(t_code,l_date,s_code,mark) values(301,'13-DEC-2018',101,8);
+insert into assessment(t_code,l_date,s_code,mark) values(301,'13-DEC-2018',105,10);
+insert into assessment(t_code,l_date,s_code,mark) values(301,'13-DEC-2018',110,4);
+insert into assessment(t_code,l_date,s_code,mark) values(302,'18-DEC-2018',102,6);
+insert into assessment(t_code,l_date,s_code,mark) values(302,'18-DEC-2018',108,7);
+insert into assessment(t_code,l_date,s_code,mark) values(302,'18-DEC-2018',105,5);
+insert into assessment(t_code,l_date,s_code,mark) values(303,'02-JAN-2019',106,8);
+insert into assessment(t_code,l_date,s_code,mark) values(303,'02-JAN-2019',103,9);
+insert into assessment(t_code,l_date,s_code,mark) values(303,'02-JAN-2019',101,3);
+insert into assessment(t_code,l_date,s_code,mark) values(304,'21-JAN-2019',107,5);
+insert into assessment(t_code,l_date,s_code,mark) values(304,'21-JAN-2019',110,7);
+insert into assessment(t_code,l_date,s_code,mark) values(304,'21-JAN-2019',109,8);
+insert into assessment(t_code,l_date,s_code,mark) values(305,'01-FEB-2019',106,4);
+insert into assessment(t_code,l_date,s_code,mark) values(305,'01-FEB-2019',103,9);
+insert into assessment(t_code,l_date,s_code,mark) values(305,'01-FEB-2019',105,7);
+insert into assessment(t_code,l_date,s_code,mark) values(305,'01-FEB-2019',108,6);

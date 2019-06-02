@@ -1,0 +1,102 @@
+drop table takes_training;
+drop table training;
+drop table currency;
+drop table payment;
+drop table minion_involved_in_mission; 
+drop table master;
+drop table mission;
+drop table minion;
+drop table evilness;
+
+
+
+create table evilness(
+    evil_id int,
+    elevel int unique,
+    description varchar(15),
+    primary key(evil_id)
+    );
+
+create table minion(
+    minion_id int,
+    name varchar(10),
+    gender varchar(1),
+    age int,
+    nationality varchar(15),
+    hiring_charge int,
+    evilness int,
+    primary key(minion_id),
+    foreign key(evilness) references evilness(evil_id)
+    );
+
+create table training(
+    training_id int,
+    from_date date,
+    to_date date,
+    elevel int,
+    trainer int,
+    primary key(training_id),
+    foreign key(elevel) references evilness(elevel),
+    foreign key(trainer) references minion(minion_id)
+    );
+
+create table mission(
+    mission_id int,
+    pre_req int,
+    minion_count int,
+    country varchar(15),
+    estimate int,
+    from_date date,
+    to_date date,
+    status varchar(15),
+    primary key(mission_id),
+    foreign key(pre_req) references training(training_id)
+    );
+
+create table master(
+    master_id int,
+    name varchar(15),
+    mtype varchar(20),
+    nationality varchar(15),
+    primary key(master_id)
+    );
+
+    
+create table minion_involved_in_mission(
+    minion_id int,
+    mission_id int,
+    master_id int,
+    primary key(minion_id, mission_id),
+    foreign key(minion_id) references minion(minion_id),
+    foreign key(mission_id) references mission(mission_id),
+    foreign key(master_id) references master(master_id)
+    );
+    
+
+create table currency(
+    currency_id int,
+    name varchar(15),
+    country varchar(15),
+    b_currency int,
+    primary key(currency_id)
+    );
+
+create table payment(
+    mission_id int,
+    payment_id int,
+    currency_id int,
+    amount int,
+    date_of_payment date,
+    primary key(mission_id, payment_id),
+    foreign key(mission_id) references mission(mission_id),
+    foreign key(currency_id) references currency(currency_id)
+    );
+
+create table takes_training(
+    training_id int,
+    minion_id int,
+    primary key(training_id,minion_id),
+    foreign key(training_id) references training(training_id),
+    foreign key(minion_id) references minion(minion_id)
+    );
+

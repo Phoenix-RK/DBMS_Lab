@@ -1,0 +1,102 @@
+ 
+1)select s.name,c.name from student s,course c,taken t where s.stud_id=t.stud_id and c.course_id=t.course_id;
+NAME                 NAME
+-------------------- --------------------
+Kiruthya             DBMS LAB
+Kiruthya             DAA
+Kiruthya             DBMS
+Sharanya             OS
+Kavya                POM
+Kavya                OS
+Kavya                DBMS
+Aarthy               DBMS LAB
+Harshini             OS LAB
+Harshini             CA
+Ishwarya             POM
+
+NAME                 NAME
+-------------------- --------------------
+Vishnu Priya         DBMS
+
+
+
+
+ 2)select name from student s left join taken t on s.stud_id=t.stud_id
+   minus
+   select name from student where stud_id in (select stud_id from taken where course_id is not null);
+
+NAME
+--------------------
+Nandhini
+Roshini
+Sivapreethi
+
+3)select c.name from course c
+inner join
+(
+select course_id
+from 
+(
+ select count(course_id) as cnt,course_id 
+from taken 
+group by course_id
+)
+where cnt in (select max(count(course_id)) from taken group by course_id)) m 
+on m.course_id=c.course_id;
+
+NAME
+--------------------
+DBMS
+
+
+4)select c.course_id from course c left join taken t on c.course_id=t.course_id
+ minus
+ select course_id from course where course_id in (select course_id from taken where stud_id is not null);
+
+COURSE_ID
+----------
+MA7401
+
+5)select s.name from student s
+inner join
+(
+select stud_id
+from 
+(
+select stud_id,count(stud_id) as no
+from taken 
+group by stud_id
+)
+where no in (select max(count(stud_id)) from taken group by stud_id)) z 
+on z.stud_id=s.stud_id;
+
+NAME
+--------------------
+Kiruthya
+Kavya
+
+6)select max(grade),course_id from taken group by course_id order by course_id;
+
+MA COURSE
+-- ------
+O  CS7401
+O  CS7402
+O  CS7403
+O  CS7404
+O  CS7490
+O  CS7491
+A  MG7493
+
+ select s.name,m.name from student s
+ inner join
+ (
+ select stud_id,c.name from course c
+ inner join
+ (
+ select stud_id,course_id from taken t
+ where
+ grade in (select max(grade) from taken)
+ ) d on d.course_id=c.course_id
+ )m on m.stud_id=s.stud_id;
+
+
